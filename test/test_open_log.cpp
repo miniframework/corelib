@@ -11,6 +11,7 @@ int main() {
 		printf("open log error\r\n");
 	}
 	mini_writelog(MINI_LOG_WARNING,"mini_log");
+	mini_closelog(0);
 	return 0;
 
 }

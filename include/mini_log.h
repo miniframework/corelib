@@ -143,4 +143,5 @@ extern int mini_openlog_ex(mini_log_t *log_fd, const char *file_name, int mask, 
         int maxlen, mini_log_user_t * user );
 extern void mini_closefile(mini_file_t *file_fd);
 extern int mini_writelog(const int event, const char* fmt, ...)  __attribute__ ((format (printf,2,3)));
+extern int mini_closelog(int iserr);
 #endif

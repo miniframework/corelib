@@ -476,3 +476,67 @@ int mini_writelog(const int event, const char* fmt, ...)
 	}
 	return ret;
 }
+static int mini_closelog_fd(mini_log_t *log_fd)
+{
+
+	if (NULL == log_fd) {
+		return -1;
+	}
+
+	if (log_fd->pf != NULL) {
+		mini_closefile(log_fd->pf);
+	}
+	if (log_fd->pf_wf != NULL) {
+		mini_closefile(log_fd->pf_wf);
+	}
+	for (int i = 0; i < MAX_USER_DEF_LOG; i++) {
+		if(log_fd->spf[i] != NULL) {
+			mini_closefile(log_fd->spf[i]);
+		}
+	}
+
+	return 1;
+}
+static int mini_closelog_ex(int iserr, const char * close_info)
+{
+	mini_log_t  *log_fd;
+
+	log_fd = mini_get_log_unit();
+	
+	if (NULL == log_fd) {
+		return -1;
+	}
+
+
+	if (iserr) {
+		mini_writelog_ex(log_fd, MINI_LOG_END, 
+				"< ! > Abnormally end %s\n================================================",
+				close_info);
+		mini_writelog_ex(log_fd, MINI_LOG_WFEND, 
+				"< ! > Abnormally end %s\n================================================",
+				close_info);
+	} else {
+		mini_writelog_ex(log_fd, MINI_LOG_END, 
+				"< - > Normally end %s\n================================================",
+				close_info);
+		mini_writelog_ex(log_fd, MINI_LOG_WFEND, 
+				"< - > Normally end %s\n================================================",
+				close_info);
+	}
+
+	mini_closelog_fd(log_fd);
+
+	if (log_fd->log_spec & MINI_LOGTTY) {
+		fprintf(stderr,"Close log successed.\n");
+	}
+	mini_free_log_unit();
+
+
+	return 0;
+}
+
+int mini_closelog(int iserr)
+{
+	int ret = mini_closelog_ex(iserr, "process");
+	return ret;
+}
