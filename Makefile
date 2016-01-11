@@ -8,7 +8,7 @@ LIB_DIR = lib
 
 INCLUDE = -I./include 
 
-INSTALL_PATH=$(WORKROOT)lib/minilib
+INSTALL_PATH=$(WORKROOT)lib/minicore
 
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp) 
 OBJS = $(patsubst %.cpp,%.o,$(SOURCES))
