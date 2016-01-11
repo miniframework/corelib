@@ -7,8 +7,8 @@ CFLAGS = -fsigned-char -Wall -W -pipe -Wno-unused-parameter -g -D__XDEBUG__ -D__
 
 LDFLAGS=  -L$(LIBPATH) \
   -lminicore -lpthread -lm
-OBJS=test_open_log.o
-TARGET=test_open_log
+OBJS=test_open_log.o test_conf.o
+TARGET=test_open_log test_conf
 
 all : $(TARGET) $(LIB)
 	rm -f $(OBJS) 
@@ -18,6 +18,9 @@ all : $(TARGET) $(LIB)
 
 
 test_open_log: test_open_log.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(INCLUDES)
+
+test_conf: test_conf.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(INCLUDES)
 
 $(LIB) : $(OBJS)

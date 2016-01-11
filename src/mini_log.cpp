@@ -457,6 +457,9 @@ int mini_writelog(const int event, const char* fmt, ...)
 	mini_log_t *log_fd;
 
 	log_fd = mini_get_log_unit();
+	if(log_fd == NULL) {
+		log_fd = &g_log_stderr;
+	}
 
 	int user_log_id = event&MINI_LOG_USER_MASK;
 	if (event >= MINI_LOG_USER_BEGIN && event <= MINI_LOG_USER_END && log_fd->spf[user_log_id] != NULL) {
