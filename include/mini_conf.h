@@ -30,6 +30,7 @@ struct mini_confdata_t {
 extern mini_confdata_t *mini_initconf(int num);
 extern int mini_freeconf(mini_confdata_t * pd_conf);
 extern int mini_readconf(const char *work_path, const char *fname, mini_confdata_t * pd_conf) ;
-extern int mini_getconfstr(mini_confdata_t * pd_conf, const char *c_name, char *c_value);
+extern int mini_getconfstr(mini_confdata_t * pd_conf, const char *name, char *value);
+extern int mini_getconfint(mini_confdata_t * pd_conf, const char *name, int *value);
 
 #endif

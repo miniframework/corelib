@@ -10,7 +10,8 @@ int main() {
 	if(mini_openlog("./log", "openlog", &logstat, 1024, NULL) != 0) {
 		printf("open log error\r\n");
 	}
-	mini_writelog(MINI_LOG_WARNING,"mini_log");
+	for(int i =0; i< 10000;i++) 
+		mini_writelog(MINI_LOG_WARNING,"mini_log");
 	mini_closelog(0);
 	return 0;
 

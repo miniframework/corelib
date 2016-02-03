@@ -201,15 +201,16 @@ int mini_readconf(const char *work_path, const char *fname, mini_confdata_t * pd
     snprintf(totalname, sizeof(totalname), "%s/%s", work_path, fname);
     return mini_readconf_no_dir(totalname, pd_conf);
 }
-int mini_getconfstr(mini_confdata_t * pd_conf, const char *c_name, char *c_value) {
-    if (c_value == NULL || c_name == NULL || pd_conf == NULL) {
+int mini_getconfstr(mini_confdata_t * pd_conf, const char *name, char *value) {
+    if (value == NULL || name == NULL || pd_conf == NULL) {
         return -1;
     }
-    c_value[0] = '\0';
+    value[0] = '\0';
 
     for (int i = 0; i < pd_conf->num; i++) {
-        if (strcmp((pd_conf->item[i]).name, c_name) == 0) {
-            strlcpy(c_value, (pd_conf->item[i]).value, strlen((pd_conf->item[i]).value)+1);
+        if (strcmp((pd_conf->item[i]).name, name) == 0) {
+            strlcpy(value, (pd_conf->item[i]).value, strlen((pd_conf->item[i]).value)+1);
+            mini_writelog(MINI_LOG_DEBUG, "get name=%s, value=%s",name , value);
             return 0;
         }
     }
@@ -218,3 +219,37 @@ int mini_getconfstr(mini_confdata_t * pd_conf, const char *c_name, char *c_value
 
 }
 
+
+int mini_getconfint(mini_confdata_t * pd_conf, const char *name, int *value) {
+    char tstr[WORD_SIZE];
+    char *pstr = NULL;
+    int reti, num;
+
+    reti = mini_getconfstr(pd_conf, name, tstr);
+
+    if (reti == -1 || reti == 1)
+        return -1;
+
+    if ((tstr[0] == '0') && (tstr[1] == 0)) {
+        *value = 0;
+        return 1;
+    }
+
+    if (tstr[0] != '0') {
+        reti = sscanf(tstr, "%d", &num);
+    } else if (tstr[1] != 'x') {
+        pstr = tstr + 1;
+        reti = sscanf(pstr, "%o", &num);
+    } else {
+        pstr = tstr + 2;
+        reti = sscanf(pstr, "%x", &num);
+    }
+
+    if (reti <= 0) {
+        return -1;
+    }
+
+    *value = num;
+
+    return 0;
+}

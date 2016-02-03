@@ -253,7 +253,7 @@ static int mini_vwritelog_ex(mini_log_t *log_fd, int event, const char *fmt, va_
 	mini_ctime(now, sizeof(now));
 	bpos += strlen(&buff[bpos]);
 	bpos += snprintf(&buff[bpos], LOG_BUFF_SIZE_EX-bpos, "%s:  %s * %lu ",
-			now, g_proc_name, (unsigned long)log_fd->tid);
+			now, g_proc_name, (unsigned long)(log_fd->tid?log_fd->tid:pthread_self()));
 	
 	vsnprintf(&buff[bpos], LOG_BUFF_SIZE_EX-bpos, fmt, args);
 
@@ -442,7 +442,7 @@ static int mini_vwritelog_ex_user(mini_log_t *log_fd, int event, const char *fmt
 
 	mini_ctime(now, sizeof(now));
 	bpos += snprintf(&buff[bpos], LOG_BUFF_SIZE_EX-bpos, "SDF_LOG: LEVEL:%d %s: %s * %lu",
-			event, now, g_proc_name, (unsigned long)log_fd->tid);
+			event, now, g_proc_name, (unsigned long)(log_fd->tid?log_fd->tid:pthread_self()));
 	vsnprintf(&buff[bpos], LOG_BUFF_SIZE_EX-bpos, fmt, args);
 
 	return mini_vwritelog_buff(file_fd, buff, (log_fd->log_spec&MINI_LOGSIZESPLIT));
